@@ -21,12 +21,12 @@ describe("analytics (no PII)", () => {
     vi.resetModules();
     captureMock.mockClear();
     process.env = { ...originalEnv };
-    (globalThis as typeof globalThis & { window: Window }).window = {} as Window;
+    (globalThis as Record<string, unknown>).window = {};
   });
 
   afterEach(() => {
     process.env = originalEnv;
-    (globalThis as typeof globalThis & { window?: Window }).window = undefined;
+    (globalThis as Record<string, unknown>).window = undefined;
   });
 
   it("does not send name or email in event properties when enabled", async () => {
