@@ -79,6 +79,7 @@ export const create = mutation({
 export const list = query({
   args: {
     search: v.optional(v.string()),
+    status: v.optional(v.union(v.literal("New"), v.literal("Contacted"))),
     token: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -89,7 +90,17 @@ export const list = query({
       throw new Error("Unauthorized");
     }
    
-    let submissions = await ctx.db.query("submissions").collect();
+    // Use index if filtering by status, otherwise query all
+    let submissions;
+    if (args.status) {
+      const status = args.status; // TypeScript narrowing
+      submissions = await ctx.db
+        .query("submissions")
+        .withIndex("by_status", (q) => q.eq("status", status))
+        .collect();
+    } else {
+      submissions = await ctx.db.query("submissions").collect();
+    }
 
     // Apply search filter if provided
     if (args.search) {

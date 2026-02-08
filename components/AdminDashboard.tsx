@@ -14,6 +14,7 @@ interface AdminDashboardProps {
 export function AdminDashboard({ adminToken }: AdminDashboardProps) {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"New" | "Contacted" | "All">("All");
   const [error, setError] = useState<Error | null>(null);
 
   // Debounce search
@@ -27,7 +28,11 @@ export function AdminDashboard({ adminToken }: AdminDashboardProps) {
   const submissions = useQuery(
     api.submissions.list,
     adminToken
-      ? { search: debouncedSearch || undefined, token: adminToken }
+      ? {
+          search: debouncedSearch || undefined,
+          status: statusFilter !== "All" ? statusFilter : undefined,
+          token: adminToken,
+        }
       : "skip"
   );
 
@@ -155,16 +160,32 @@ export function AdminDashboard({ adminToken }: AdminDashboardProps) {
         </button>
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-        <input
-          type="text"
-          placeholder="Search by name or email..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      {/* Search and Filter */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="relative">
+          <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+          <select
+            value={statusFilter}
+            onChange={(e) =>
+              setStatusFilter(e.target.value as "New" | "Contacted" | "All")
+            }
+            className="w-full sm:w-48 pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
+          >
+            <option value="All">All Statuses</option>
+            <option value="New">New</option>
+            <option value="Contacted">Contacted</option>
+          </select>
+        </div>
       </div>
 
       {/* Table */}

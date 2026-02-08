@@ -1,11 +1,15 @@
 "use client";
+import { useEffect } from "react";
 import { determinePackage } from "@/lib/utils";
+import { trackApplyRecommendationShown } from "@/lib/analytics";
 
 interface PackageRecommendationProps {
   goal: string;
   budget: string;
   features?: string[];
   pagesCount?: number;
+  /** When set, fires apply_recommendation_shown once on mount (no PII). */
+  context?: "review" | "success";
 }
 
 export function PackageRecommendation({
@@ -13,8 +17,17 @@ export function PackageRecommendation({
   budget,
   features,
   pagesCount,
+  context,
 }: PackageRecommendationProps) {
   const packageType = determinePackage(goal, budget, features, pagesCount);
+
+  useEffect(() => {
+    if (context) {
+      trackApplyRecommendationShown(context, packageType);
+    }
+    // Fire once on mount when context is set
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [context]);
 
   const packageInfo = {
     Starter: {

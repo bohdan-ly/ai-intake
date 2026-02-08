@@ -143,6 +143,27 @@ Or deploy to your preferred hosting platform. Make sure to set the `NEXT_PUBLIC_
 - `NEXT_PUBLIC_ADMIN_PASSWORD`: Admin password for login
 - `NEXT_PUBLIC_ADMIN_TOKEN`: Admin token for API authentication
 
+### Analytics (PostHog)
+
+Analytics runs only when **both** of the following are set:
+
+- `NEXT_PUBLIC_POSTHOG_ENABLED`: Set to `true` to enable analytics (when unset or falsy, no events are sent)
+- `NEXT_PUBLIC_POSTHOG_KEY`: Your PostHog project API key (from [project settings](https://app.posthog.com/project/settings))
+
+Optional:
+
+- `NEXT_PUBLIC_POSTHOG_HOST`: PostHog host (default: `https://us.i.posthog.com`)
+
+If `NEXT_PUBLIC_POSTHOG_ENABLED` is not set or is not `true`, analytics is off and no PostHog requests are made, even if the key is present.
+
+### Analytics test
+
+Run the analytics guard test (ensures no PII in event properties):
+
+```bash
+npm run test
+```
+
 ## License
 
 MIT

@@ -105,6 +105,7 @@ export function FormStep3({ watch, onSubmit, isLoading, error }: FormStep3Props)
         budget={formData.budget}
         features={formData.features}
         pagesCount={formData.pagesCount}
+        context="review"
       />
 
       {error && (

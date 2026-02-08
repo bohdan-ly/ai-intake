@@ -107,6 +107,7 @@ export function SuccessScreen({ formData }: SuccessScreenProps) {
           budget={formData.budget}
           features={formData.features}
           pagesCount={formData.pagesCount}
+          context="success"
         />
       </div>
 

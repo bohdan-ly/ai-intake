@@ -1,5 +1,5 @@
 "use client";
-import { UseFormRegister, FieldErrors, UseFormWatch } from "react-hook-form";
+import { UseFormRegister, FieldErrors, UseFormWatch, UseFormSetValue } from "react-hook-form";
 import { z } from "zod";
 
 export const step2Schema = z.object({
@@ -18,7 +18,7 @@ interface FormStep2Props {
   register: UseFormRegister<any>;
   errors: FieldErrors<any>;
   watch: UseFormWatch<any>;
-  setValue: (name: string, value: any) => void;
+  setValue: UseFormSetValue<any> | ((name: string, value: any) => void);
 }
 
 export function FormStep2({ register, errors, watch, setValue }: FormStep2Props) {
